@@ -2,8 +2,11 @@
 #include <chrono>
 #include "QRandomGenerator"
 #include "QDesktopServices"
+#include "QMessageBox"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+QRandomGenerator64 gen(std::rand());
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,13 +30,10 @@ void MainWindow::on_pushButton_clicked()
 {
     std::thread t1([&]()
     {
-        ui->progressBar->setValue(25);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        ui->progressBar->setValue(50);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        ui->progressBar->setValue(75);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        ui->progressBar->setValue(100);
+        for (int i = 0; i <= 100; i+=5) {
+            ui->progressBar->setValue(i);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
     });
     std::thread t2([&]()
     {
@@ -67,10 +67,7 @@ void MainWindow::on_pushButton_clicked()
         {
             int randpic = -1;
             if (!ui->checkBox_2->isChecked())
-            {
-                QRandomGenerator gen(random());
                 randpic = gen.bounded(1, 6);
-            }
             QString tmpl = ":/prefix/pics/%1.jpg";
             QString file = tmpl.arg(randpic);
             QPixmap pixmap(file);
@@ -94,5 +91,18 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionDeveloper_s_GitHub_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/DarkCat09"));
+}
+
+
+void MainWindow::on_actionApplication_triggered()
+{
+    QMessageBox msg(
+                QMessageBox::Icon::Information,
+                tr("About this app"),
+                tr("This application written just for learning\n"
+                   "Qt for Desktop and Mobile.\n"
+                   "by DarkCat09"),
+                QMessageBox::Ok);
+    msg.exec();
 }
 

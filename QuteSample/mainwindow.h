@@ -24,6 +24,8 @@ private slots:
 
     void on_actionDeveloper_s_GitHub_triggered();
 
+    void on_actionApplication_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
